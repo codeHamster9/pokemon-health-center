@@ -5,6 +5,32 @@ Build an internal dashboard for Pokémon Centers that visualizes healing activit
 
 ---
 
+## Dependencies
+
+### Backend (Python)
+| Package | Purpose |
+|---------|---------|
+| `fastapi` | Web framework |
+| `uvicorn` | ASGI server |
+| `pydantic` | Request/response validation (bundled with FastAPI) |
+
+*Python's built-in `sqlite3` handles the database — no ORM.*
+
+### Frontend (React)
+| Package | Purpose |
+|---------|---------|
+| `react-router-dom` | Page navigation |
+| `@tanstack/react-query` | Data fetching with caching/refetching |
+| `zod` | Schema validation |
+| `recharts` | Charts (per requirements) |
+| `@radix-ui/*` | Primitives for shadcn/ui components |
+| `class-variance-authority` | Component variants (shadcn pattern) |
+| `clsx` + `tailwind-merge` | Class utilities for shadcn |
+| `lucide-react` | Icons |
+| `date-fns` | Date formatting/parsing |
+
+---
+
 ## Proposed Changes
 
 ### Backend (Python FastAPI)
