@@ -128,15 +128,15 @@ Architecture decisions, trade-offs, and future improvements.
   │   │       └── ActiveCheckins.tsx
   │   ├── features/
   │   │   └── pokemon/            # Pokemon feature module
-  │   │       ├── components/     # Feature-specific components (cards, charts, tables)
-  │   │       │   ├── StatCard.tsx
-  │   │       │   ├── CheckinTrendChart.tsx
-  │   │       │   ├── LeaderboardTable.tsx
-  │   │       │   └── DismissDialog.tsx
+  │   │       ├── components/     # Feature-specific components
+  │   │       │   ├── PokemonStatCard.tsx
+  │   │       │   ├── PokemonCheckinTrendChart.tsx
+  │   │       │   ├── PokemonLeaderboardTable.tsx
+  │   │       │   └── PokemonDismissDialog.tsx
   │   │       ├── hooks/
-  │   │       │   └── useCheckins.ts
+  │   │       │   └── usePokemonCheckins.ts
   │   │       ├── store/
-  │   │       │   └── filtersStore.ts
+  │   │       │   └── pokemonStore.ts
   │   │       └── api/
   │   │           └── pokemonApi.ts
   │   ├── components/
