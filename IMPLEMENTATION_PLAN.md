@@ -21,7 +21,9 @@ Build an internal dashboard for Pokémon Centers that visualizes healing activit
 |---------|---------|
 | `react-router-dom` | Page navigation |
 | `@tanstack/react-query` | Data fetching with caching/refetching |
+| `zustand` | Global state management |
 | `zod` | Schema validation |
+| `tailwindcss` | Utility-first CSS framework |
 | `recharts` | Charts (per requirements) |
 | `@radix-ui/*` | Primitives for shadcn/ui components |
 | `class-variance-authority` | Component variants (shadcn pattern) |
@@ -109,20 +111,38 @@ Architecture decisions, trade-offs, and future improvements.
       └── checkins.py
 /frontend
   ├── package.json
+  ├── tailwind.config.js
   ├── src/
   │   ├── App.tsx
   │   ├── main.tsx
   │   ├── index.css
+  │   ├── store/                  # Zustand global stores
+  │   │   └── themeStore.ts
+  │   ├── providers/              # React context providers
+  │   │   ├── QueryProvider.tsx
+  │   │   └── ThemeProvider.tsx
   │   ├── pages/
-  │   │   ├── Dashboard.tsx
-  │   │   ├── Machines.tsx
-  │   │   └── ActiveCheckins.tsx
+  │   │   └── pokemon/            # Pokemon feature pages
+  │   │       ├── Dashboard.tsx
+  │   │       ├── MachineMetrics.tsx
+  │   │       └── ActiveCheckins.tsx
+  │   ├── features/
+  │   │   └── pokemon/            # Pokemon feature module
+  │   │       ├── components/     # Feature-specific components (cards, charts, tables)
+  │   │       │   ├── StatCard.tsx
+  │   │       │   ├── CheckinTrendChart.tsx
+  │   │       │   ├── LeaderboardTable.tsx
+  │   │       │   └── DismissDialog.tsx
+  │   │       ├── hooks/
+  │   │       │   └── useCheckins.ts
+  │   │       ├── store/
+  │   │       │   └── filtersStore.ts
+  │   │       └── api/
+  │   │           └── pokemonApi.ts
   │   ├── components/
-  │   │   └── ui/
-  │   ├── hooks/
-  │   │   └── useApi.ts
+  │   │   └── ui/                 # shadcn/ui components
   │   └── lib/
-  │       └── theme.ts
+  │       └── utils.ts
 README.md
 DECISIONS.md
 clinic.sqlite
