@@ -71,7 +71,11 @@ shadcn/ui components: Button, Card, Table, Select, Dialog, Skeleton, DatePicker.
 #### [NEW] [pages/Dashboard.tsx](file:///home/idan/workspaces/gemini/guardio/frontend/src/pages/Dashboard.tsx)
 Overview dashboard with:
 - Stat cards (total check-ins, success rate, active count, top machine)
-- Check-ins trend chart (Recharts line/bar) with date range picker and filters
+- Check-ins trend chart (Recharts line/bar) with 4 filters:
+  - Date range picker (last 7/30 days, this month, custom)
+  - Group by (day/hour)
+  - Segment by type (all types, electric, fire, water, grass, etc.)
+  - Filter by Pokémon (all, specific Pokémon)
 - Leaderboards (top Pokémon, top types)
 
 #### [NEW] [pages/Machines.tsx](file:///home/idan/workspaces/gemini/guardio/frontend/src/pages/Machines.tsx)

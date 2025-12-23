@@ -21,6 +21,10 @@
     - [ ] **Dashboard Page**
         - [ ] Stat Cards
         - [ ] Trend Chart (Recharts)
+        - [ ] Chart Filter: Date Range Picker
+        - [ ] Chart Filter: Group By (day/hour)
+        - [ ] Chart Filter: Segment By Type
+        - [ ] Chart Filter: Filter By Pokémon
         - [ ] Leaderboard Tables
     - [ ] **Machine Metrics Page**
         - [ ] Data Table
