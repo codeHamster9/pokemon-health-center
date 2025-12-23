@@ -81,6 +81,15 @@ src/
 
 ---
 
+## Git Workflow
+
+- **Feature branches** — create a new branch for each development phase (e.g., `feature/phase-1-backend`, `feature/phase-2-frontend`)
+- **Commit frequently** — commit after each logical change
+- **Meaningful messages** — use descriptive commit messages that explain what and why (e.g., `feat: add Pokemon stats card component`, `fix: handle null evolution data`)
+- **Conventional commits** — follow pattern: `type: description` where type is `feat`, `fix`, `refactor`, `docs`, `style`, `test`, or `chore`
+
+---
+
 ## UI/UX Requirements
 
 - **System theme detection** + manual toggle
