@@ -7,7 +7,6 @@ from ..models import ActiveCheckin, Pokemon, Machine
 
 router = APIRouter(prefix="/checkins", tags=["checkins"])
 
-@APIRouter(prefix="/checkins", tags=["checkins"])
 @router.get("/active", response_model=List[ActiveCheckin])
 def get_active_checkins(db: sqlite3.Connection = Depends(get_db)):
     query = """
