@@ -1,16 +1,16 @@
 # Task Checklist - Pokémon Center Dashboard
 
 ## Phase 1: Backend Implementation 🐍
-- [ ] **Setup**
-    - [ ] Initialize `backend/main.py` (FastAPI app, CORS)
-    - [ ] Create `backend/database.py` (SQLite connection manager)
-    - [ ] Define `backend/models.py` (Pydantic models)
-- [ ] **Endpoints**
-    - [ ] `GET /metrics/checkins` (Trends & filters)
-    - [ ] `GET /metrics/machines` (Machine performance)
-    - [ ] `GET /leaderboards` (Top Pokémon/Types)
-    - [ ] `GET /checkins/active` (Live list)
-    - [ ] `POST /checkins/dismiss/:id` (Action)
+- [x] **Setup**
+    - [x] Initialize `backend/main.py` (FastAPI app, CORS)
+    - [x] Create `backend/database.py` (SQLite connection manager)
+    - [x] Define `backend/models.py` (Pydantic models)
+- [x] **Endpoints**
+    - [x] `GET /metrics/checkins` (Trends & filters)
+    - [x] `GET /metrics/machines` (Machine performance)
+    - [x] `GET /leaderboards` (Top Pokémon/Types)
+    - [x] `GET /checkins/active` (Live list)
+    - [x] `POST /checkins/dismiss/:id` (Action)
 
 ## Phase 2: Frontend Implementation ⚛️
 - [ ] **Setup**
