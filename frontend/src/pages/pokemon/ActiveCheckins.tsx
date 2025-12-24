@@ -72,15 +72,16 @@ export default function ActiveCheckins() {
                     return (
                         <div
                             key={virtualRow.key}
+                            data-index={virtualRow.index}
+                            ref={virtualizer.measureElement}
                             style={{
                                 position: 'absolute',
                                 top: 0,
                                 left: 0,
                                 width: '100%',
-                                height: `${virtualRow.size}px`,
                                 transform: `translateY(${virtualRow.start - virtualizer.options.scrollMargin}px)`,
                             }}
-                            className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+                            className="grid gap-4 pb-4 md:grid-cols-2 lg:grid-cols-3"
                         >
                             {rowCheckins.map((checkin) => (
                                 <CheckinCard
