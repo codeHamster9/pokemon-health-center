@@ -27,6 +27,10 @@ def get_checkin_metrics(
             start_date = (today - timedelta(days=30)).strftime("%Y-%m-%d")
         elif time_range == "month":
             start_date = today.replace(day=1).strftime("%Y-%m-%d")
+        elif time_range == "year":
+             start_date = today.replace(month=1, day=1).strftime("%Y-%m-%d")
+        elif time_range == "all":
+             start_date = None
     # Determine date format for grouping
     date_format = "%Y-%m-%d"
     if group_by == "hour":

@@ -13,7 +13,7 @@ interface PokemonStore {
 
 export const usePokemonStore = create<PokemonStore>((set) => ({
     filters: {
-        timeRange: '7d',
+        timeRange: 'all',
         groupBy: 'day',
         segmentType: 'all',
         filterPokemon: 'all',
@@ -25,7 +25,7 @@ export const usePokemonStore = create<PokemonStore>((set) => ({
     resetFilters: () =>
         set({
             filters: {
-                timeRange: '7d',
+                timeRange: 'all',
                 groupBy: 'day',
                 segmentType: 'all',
                 filterPokemon: 'all',

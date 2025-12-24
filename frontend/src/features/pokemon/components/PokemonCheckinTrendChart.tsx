@@ -46,7 +46,7 @@ export function PokemonCheckinTrendChart({ data, loading, children }: PokemonChe
                 <ResponsiveContainer width="100%" height={350}>
                     <BarChart data={data}>
                         <XAxis
-                            dataKey="date" // Assumes backend returns 'date' or timestamp
+                            dataKey="label" // Matches backend MetricPoint.label
                             stroke="#888888"
                             fontSize={12}
                             tickLine={false}

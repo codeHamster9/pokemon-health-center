@@ -40,9 +40,9 @@
 - [x] **Connectivity**
     - [x] Connect Frontend to Backend API
     - [x] React Query integration for data fetching
-- [ ] **Visuals**
-    - [ ] Verify Responsive Design
-    - [ ] Polish Animations & Loading States
+- [x] **Visuals**
+    - [x] Verify Responsive Design
+    - [x] Polish Animations & Loading States
 - [ ] **Documentation**
     - [ ] Write `README.md`
     - [ ] Write `DECISIONS.md`
