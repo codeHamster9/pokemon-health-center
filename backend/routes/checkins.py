@@ -8,7 +8,12 @@ from ..models import ActiveCheckin, Pokemon, Machine
 router = APIRouter(prefix="/checkins", tags=["checkins"])
 
 @router.get("/active", response_model=List[ActiveCheckin])
-def get_active_checkins(db: sqlite3.Connection = Depends(get_db)):
+def get_active_checkins(
+    page: int = 1,
+    limit: int = 9,
+    db: sqlite3.Connection = Depends(get_db)
+):
+    offset = (page - 1) * limit
     query = """
         SELECT 
             c.id, c.arrived_at, c.initial_hp, c.max_hp,
@@ -19,8 +24,9 @@ def get_active_checkins(db: sqlite3.Connection = Depends(get_db)):
         JOIN machines m ON c.machine_id = m.id
         WHERE c.healed_at IS NULL
         ORDER BY c.arrived_at DESC
+        LIMIT ? OFFSET ?
     """
-    cursor = db.execute(query)
+    cursor = db.execute(query, (limit, offset))
     rows = cursor.fetchall()
     
     results = []

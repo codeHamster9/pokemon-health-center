@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePokemonCheckins } from "../../features/pokemon/hooks/usePokemonCheckins";
 import { PokemonDismissDialog } from "../../features/pokemon/components/PokemonDismissDialog";
 import { Checkin } from "../../features/pokemon/api/pokemonApi";
@@ -21,7 +21,19 @@ export default function ActiveCheckins() {
         }
     };
 
-    const data = activeCheckins.data || [];
+    // Auto-scroll logic
+    const prevCountRef = useRef(0);
+    // Flatten pages
+    const checkins = activeCheckins.data?.pages.flatMap((page) => page) || [];
+
+    useEffect(() => {
+        const currentCount = checkins.length;
+        if (currentCount > prevCountRef.current && prevCountRef.current > 0) {
+            // Data added (and not initial load), scroll to bottom
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+        prevCountRef.current = currentCount;
+    }, [checkins.length]);
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
@@ -33,7 +45,7 @@ export default function ActiveCheckins() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {data.map((checkin) => {
+                {checkins.map((checkin) => {
                     const healthPercent = Math.min((checkin.initial_hp / checkin.max_hp) * 100, 100);
                     let healthColor = "bg-green-500";
                     if (healthPercent < 30) healthColor = "bg-red-500";
@@ -85,12 +97,24 @@ export default function ActiveCheckins() {
                     )
                 })}
 
-                {data.length === 0 && (
+                {checkins.length === 0 && (
                     <div className="col-span-full py-12 text-center text-muted-foreground">
                         No active check-ins at the moment.
                     </div>
                 )}
             </div>
+
+            {activeCheckins.hasNextPage && (
+                <div className="flex justify-center pt-6">
+                    <Button
+                        variant="ghost"
+                        onClick={() => activeCheckins.fetchNextPage()}
+                        disabled={activeCheckins.isFetchingNextPage}
+                    >
+                        {activeCheckins.isFetchingNextPage ? "Loading more..." : "Load More"}
+                    </Button>
+                </div>
+            )}
 
             <PokemonDismissDialog
                 open={dialogOpen}

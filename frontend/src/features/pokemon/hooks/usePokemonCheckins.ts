@@ -1,13 +1,17 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { pokemonApi } from '../api/pokemonApi';
 
 export const usePokemonCheckins = () => {
     const queryClient = useQueryClient();
 
-    const activeCheckins = useQuery({
+    const activeCheckins = useInfiniteQuery({
         queryKey: ['active-checkins'],
-        queryFn: pokemonApi.getActiveCheckins,
-        refetchInterval: 30000, // Poll every 30 seconds
+        queryFn: ({ pageParam = 1 }) => pokemonApi.getActiveCheckins(pageParam),
+        getNextPageParam: (lastPage, allPages) => {
+            return lastPage.length < 9 ? undefined : allPages.length + 1;
+        },
+        initialPageParam: 1,
+        refetchInterval: 30000,
     });
 
     const dismissCheckin = useMutation({

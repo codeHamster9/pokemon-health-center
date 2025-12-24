@@ -44,8 +44,8 @@ export const checkinSchema = z.object({
 });
 
 export const pokemonApi = {
-    getActiveCheckins: async (): Promise<Checkin[]> => {
-        const response = await fetch(`${API_BASE_URL}/checkins/active`);
+    getActiveCheckins: async (page: number = 1): Promise<Checkin[]> => {
+        const response = await fetch(`${API_BASE_URL}/checkins/active?page=${page}&limit=9`);
         if (!response.ok) throw new Error('Failed to fetch active check-ins');
         return response.json();
     },
