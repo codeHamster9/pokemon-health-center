@@ -45,7 +45,10 @@ class MetricPoint(BaseModel):
     count: int
 
 class MachinePerformance(BaseModel):
-    machine_id: int
-    machine_name: str
-    total_heals: int
+    id: int
+    name: str
+    model: str
+    location: str
+    total_checkins: int
     success_rate: float
+    current_checkin: Optional[ActiveCheckin] = None

@@ -37,9 +37,9 @@
     - [x] Dark Mode Toggle
 
 ## Phase 3: Integration & Polish 💅
-- [ ] **Connectivity**
-    - [ ] Connect Frontend to Backend API
-    - [ ] React Query integration for data fetching
+- [x] **Connectivity**
+    - [x] Connect Frontend to Backend API
+    - [x] React Query integration for data fetching
 - [ ] **Visuals**
     - [ ] Verify Responsive Design
     - [ ] Polish Animations & Loading States

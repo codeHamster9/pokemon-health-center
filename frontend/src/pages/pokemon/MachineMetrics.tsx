@@ -42,7 +42,7 @@ export default function MachineMetrics() {
     // unless backend does complex stuff. Backend just compares success rate.
 
     const machines = machineMetrics.data || [];
-    const baselineMachine = machines.find(m => m.id.toString() === baselineId);
+    const baselineMachine = machines.find(m => m.id?.toString() === baselineId);
 
     return (
         <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">

@@ -4,17 +4,29 @@ import sqlite3
 from ..database import get_db
 from ..models import MetricPoint, MachinePerformance
 
+from datetime import datetime, timedelta
+
 router = APIRouter(prefix="/metrics", tags=["metrics"])
 
 @router.get("/checkins", response_model=List[MetricPoint])
 def get_checkin_metrics(
     start_date: Optional[str] = None,
     end_date: Optional[str] = None,
+    time_range: Optional[str] = None,
     group_by: str = Query("day", enum=["day", "hour"]),
     type: Optional[str] = None,
     pokemon_id: Optional[int] = None,
     db: sqlite3.Connection = Depends(get_db)
 ):
+    # Handle time_range shortcut
+    if time_range and not start_date:
+        today = datetime.now()
+        if time_range == "7d":
+            start_date = (today - timedelta(days=7)).strftime("%Y-%m-%d")
+        elif time_range == "30d":
+            start_date = (today - timedelta(days=30)).strftime("%Y-%m-%d")
+        elif time_range == "month":
+            start_date = today.replace(day=1).strftime("%Y-%m-%d")
     # Determine date format for grouping
     date_format = "%Y-%m-%d"
     if group_by == "hour":
@@ -55,27 +67,65 @@ def get_checkin_metrics(
 
 @router.get("/machines", response_model=List[MachinePerformance])
 def get_machine_metrics(db: sqlite3.Connection = Depends(get_db)):
+    # Get basic machine stats
     query = """
         SELECT 
-            m.id, m.name, 
-            COUNT(c.id) as total_heals,
+            m.id, m.name, m.model, m.location,
+            COUNT(c.id) as total_checkins,
             SUM(CASE WHEN c.outcome = 'success' THEN 1 ELSE 0 END) as success_count
         FROM machines m
         LEFT JOIN checkins c ON m.id = c.machine_id
         GROUP BY m.id
     """
     
+    # Get active active checkins for mapping
+    # Simple separate query to avoid complex join duplication issues
+    active_query = """
+        SELECT 
+            c.id, c.arrived_at, c.initial_hp, c.max_hp,
+            c.pokemon_id, c.machine_id,
+            p.id as p_id, p.name as p_name, p.type_primary, p.type_secondary,
+            m.id as m_id, m.name as m_name, m.model as m_model, m.location as m_location
+        FROM checkins c
+        JOIN pokemon p ON c.pokemon_id = p.id
+        JOIN machines m ON c.machine_id = m.id
+        WHERE c.healed_at IS NULL
+    """
+    
+    active_map = {}
+    for row in db.execute(active_query):
+        # Construct nested objects manually for ActiveCheckin model
+        p = {
+            "id": row["p_id"], "name": row["p_name"], 
+            "type_primary": row["type_primary"], "type_secondary": row["type_secondary"]
+        }
+        m = {
+            "id": row["m_id"], "name": row["m_name"], 
+            "model": row["m_model"], "location": row["m_location"]
+        }
+        active_map[row["machine_id"]] = {
+            "id": row["id"],
+            "arrived_at": row["arrived_at"],
+            "initial_hp": row["initial_hp"],
+            "max_hp": row["max_hp"],
+            "pokemon": p,
+            "machine": m
+        }
+
     results = []
     for row in db.execute(query):
-        total = row["total_heals"]
+        total = row["total_checkins"]
         success = row["success_count"] if row["success_count"] else 0
         rate = (success / total * 100) if total > 0 else 0.0
         
         results.append(MachinePerformance(
-            machine_id=row["id"],
-            machine_name=row["name"],
-            total_heals=total,
-            success_rate=round(rate, 2)
+            id=row["id"],
+            name=row["name"],
+            model=row["model"],
+            location=row["location"],
+            total_checkins=total,
+            success_rate=round(rate, 2),
+            current_checkin=active_map.get(row["id"])
         ))
     return results
 
