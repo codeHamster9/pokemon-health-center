@@ -43,6 +43,6 @@
 - [x] **Visuals**
     - [x] Verify Responsive Design
     - [x] Polish Animations & Loading States
-- [ ] **Documentation**
-    - [ ] Write `README.md`
-    - [ ] Write `DECISIONS.md`
+- [x] **Documentation**
+    - [x] Write `README.md`
+    - [x] Write `DECISIONS.md`
