@@ -3,12 +3,12 @@ import { Clock } from "lucide-react";
 import { Checkin } from "../api/pokemonApi";
 import { getPokemonTypeIcon } from "../utils/pokemonUtils";
 
-interface CheckinCardProps {
+interface PokemonCheckinCardProps {
     checkin: Checkin;
     onDismiss: (checkin: Checkin) => void;
 }
 
-export function CheckinCard({ checkin, onDismiss }: CheckinCardProps) {
+export function PokemonCheckinCard({ checkin, onDismiss }: PokemonCheckinCardProps) {
     const healthPercent = Math.min((checkin.initial_hp / checkin.max_hp) * 100, 100);
     let healthColor = "bg-green-500";
     if (healthPercent < 30) healthColor = "bg-red-500";

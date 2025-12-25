@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { Activity, Zap } from 'lucide-react';
-import { useMachineMetrics } from "../hooks/useMachineMetrics";
+import { usePokemonMachineMetrics } from "../hooks/usePokemonMachineMetrics";
 import { PokemonStatCard } from './PokemonStatCard';
 import { PokemonTotalCheckinsCard } from './PokemonTotalCheckinsCard';
 import { PokemonTopMachineCard } from './PokemonTopMachineCard';
 
 export function PokemonStatsGrid() {
-    const { data: machines } = useMachineMetrics();
+    const { data: machines } = usePokemonMachineMetrics();
 
     const avgSuccessRate = useMemo(() => {
         if (machines.length === 0) return "0.0";

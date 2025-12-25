@@ -1,5 +1,5 @@
 import { Calendar, Search, Layers, BarChart2 } from "lucide-react";
-import { useCheckinTrends } from "../hooks/useCheckinTrends";
+import { usePokemonCheckinTrends } from "../hooks/usePokemonCheckinTrends";
 import { usePokemonStore } from "../store/pokemonStore";
 import { PokemonCheckinTrendChart } from "./PokemonCheckinTrendChart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export function PokemonTrendSection() {
     const { filters, setFilter } = usePokemonStore();
 
-    const { data: trendData } = useCheckinTrends({
+    const { data: trendData } = usePokemonCheckinTrends({
         timeRange: filters.timeRange,
         groupBy: filters.groupBy,
         type: filters.segmentType === 'all' ? undefined : filters.segmentType,

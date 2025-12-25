@@ -1,5 +1,5 @@
 import { Suspense, useState } from "react";
-import { useMachineMetrics } from "@/features/pokemon/hooks/useMachineMetrics";
+import { usePokemonMachineMetrics } from "@/features/pokemon/hooks/usePokemonMachineMetrics";
 import { PokemonMachineMetricsTable } from "@/features/pokemon/components/PokemonMachineMetricsTable";
 import { PokemonTableSkeleton } from "@/features/pokemon/components/PokemonTableSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,7 +13,7 @@ import {
 
 // Separate component to fetch machines for the dropdown (uses Suspense)
 function BaselineSelector({ value, onChange }: { value?: string; onChange: (v: string) => void }) {
-    const { data: machines } = useMachineMetrics();
+    const { data: machines } = usePokemonMachineMetrics();
 
     return (
         <Select onValueChange={onChange} value={value}>

@@ -3,7 +3,7 @@ import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import { usePokemonCheckins } from "../hooks/usePokemonCheckins";
 import { useResponsiveColumns } from "@/hooks/useResponsiveColumns";
 import { useAutoScroll } from "@/hooks/useAutoScroll";
-import { CheckinCard } from "./CheckinCard";
+import { PokemonCheckinCard } from "./PokemonCheckinCard";
 import { PokemonDismissDialog } from "./PokemonDismissDialog";
 import { Checkin } from "../api/pokemonApi";
 import { Button } from "@/components/ui/button";
@@ -76,7 +76,7 @@ export function PokemonActiveCheckinsList() {
                             className="grid gap-4 pb-4 md:grid-cols-2 lg:grid-cols-3"
                         >
                             {rowCheckins.map((checkin) => (
-                                <CheckinCard
+                                <PokemonCheckinCard
                                     key={checkin.id}
                                     checkin={checkin}
                                     onDismiss={handleDismissClick}

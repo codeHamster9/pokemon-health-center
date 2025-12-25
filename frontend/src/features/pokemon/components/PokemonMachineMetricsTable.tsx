@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { useMachineMetrics } from "../hooks/useMachineMetrics";
+import { usePokemonMachineMetrics } from "../hooks/usePokemonMachineMetrics";
 import {
     Table,
     TableBody,
@@ -14,7 +14,7 @@ interface PokemonMachineMetricsTableProps {
 }
 
 export function PokemonMachineMetricsTable({ baselineId }: PokemonMachineMetricsTableProps) {
-    const { data: machines } = useMachineMetrics();
+    const { data: machines } = usePokemonMachineMetrics();
 
     const baselineMachine = machines.find(m => m.id?.toString() === baselineId);
 

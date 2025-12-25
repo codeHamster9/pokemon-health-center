@@ -1,8 +1,8 @@
-import { useLeaderboards } from "../hooks/useLeaderboards";
+import { usePokemonLeaderboards } from "../hooks/usePokemonLeaderboards";
 import { PokemonLeaderboardTable } from "./PokemonLeaderboardTable";
 
 export function PokemonLeaderboardSection() {
-    const { data: leaderboards } = useLeaderboards();
+    const { data: leaderboards } = usePokemonLeaderboards();
 
     return (
         <PokemonLeaderboardTable

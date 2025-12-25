@@ -8,7 +8,7 @@ interface TrendFilters {
     pokemonId?: string;
 }
 
-export const useCheckinTrends = (filters: TrendFilters) => {
+export const usePokemonCheckinTrends = (filters: TrendFilters) => {
     return useSuspenseQuery({
         queryKey: ['checkin-trends', filters],
         queryFn: () => pokemonApi.getCheckinTrends(
