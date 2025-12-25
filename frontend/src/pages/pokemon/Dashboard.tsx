@@ -1,18 +1,21 @@
-import { Activity, Calendar, Users, Zap, Search, Layers, BarChart2 } from "lucide-react"
-import { useCheckinTrends } from "../../features/pokemon/hooks/useCheckinTrends";
-import { useMachineMetrics } from "../../features/pokemon/hooks/useMachineMetrics";
-import { useLeaderboards } from "../../features/pokemon/hooks/useLeaderboards";
-import { usePokemonStore } from "../../features/pokemon/store/pokemonStore";
-import { PokemonStatCard } from "../../features/pokemon/components/PokemonStatCard";
-import { PokemonCheckinTrendChart } from "../../features/pokemon/components/PokemonCheckinTrendChart";
-import { PokemonLeaderboardTable } from "../../features/pokemon/components/PokemonLeaderboardTable";
+import { Activity, Calendar, Zap, Search, Layers, BarChart2 } from "lucide-react"
+import { useCheckinTrends } from "@/features/pokemon/hooks/useCheckinTrends";
+import { useMachineMetrics } from "@/features/pokemon/hooks/useMachineMetrics";
+import { useLeaderboards } from "@/features/pokemon/hooks/useLeaderboards";
+import { usePokemonStore } from "@/features/pokemon/store/pokemonStore";
+import { PokemonStatCard } from "@/features/pokemon/components/PokemonStatCard";
+import { PokemonTotalCheckinsCard } from "@/features/pokemon/components/PokemonTotalCheckinsCard";
+import { PokemonTopMachineCard } from "@/features/pokemon/components/PokemonTopMachineCard";
+import { PokemonCheckinTrendChart } from "@/features/pokemon/components/PokemonCheckinTrendChart";
+import { PokemonLeaderboardTable } from "@/features/pokemon/components/PokemonLeaderboardTable";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
-import { Machine } from "../../features/pokemon/api/pokemonApi";
 
 export default function Dashboard() {
     const { filters, setFilter } = usePokemonStore();
+    const { data: leaderboards } = useLeaderboards();
+    const { data: machines = [] } = useMachineMetrics();
 
     const checkinTrends = useCheckinTrends({
         timeRange: filters.timeRange,
@@ -21,22 +24,10 @@ export default function Dashboard() {
         pokemonId: filters.filterPokemon === 'all' ? undefined : filters.filterPokemon
     });
 
-    const { data: leaderboards } = useLeaderboards();
-    const { data: machines = [] } = useMachineMetrics();
-
-    const totalCheckins = machines.reduce((acc, m) => acc + (m.total_checkins || 0), 0);
     const avgSuccessRate = machines.length > 0
         ? (machines.reduce((acc, m) => acc + (m.success_rate || 0), 0) / machines.length).toFixed(1)
         : "0.0";
     const activeCount = machines.filter(m => m.current_checkin).length;
-
-    const topMachine = machines.reduce((prev, current) => {
-        return (prev.success_rate || 0) > (current.success_rate || 0) ? prev : current
-    }, { name: 'N/A', success_rate: 0 } as Partial<Machine>);
-
-    const topMachineName = topMachine.name || 'N/A'; // Ensure string
-    const topMachineRate = topMachine.success_rate || 0;
-
 
     return (
         <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
@@ -51,12 +42,7 @@ export default function Dashboard() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <PokemonStatCard
-                    title="Total Check-ins"
-                    value={totalCheckins.toLocaleString()}
-                    icon={Users}
-                    description={<span className="text-green-500 font-medium">+12% from last week</span>} // Hardcoded delta for now
-                />
+                <PokemonTotalCheckinsCard machines={machines} />
                 <PokemonStatCard
                     title="Success Rate"
                     value={`${avgSuccessRate}%`}
@@ -69,12 +55,7 @@ export default function Dashboard() {
                     icon={Zap} // Pulse icon replacement
                     description={<span className="text-blue-500 font-medium animate-pulse">● Currently treating</span>}
                 />
-                <PokemonStatCard
-                    title="Top Machine"
-                    value={topMachineName}
-                    icon={Zap}
-                    description={`${topMachineRate}% success rate`}
-                />
+                <PokemonTopMachineCard machines={machines} />
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
