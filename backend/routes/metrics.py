@@ -38,8 +38,6 @@ def get_checkin_metrics(
             start_date = reference_date.replace(day=1).strftime("%Y-%m-%d")
         elif time_range == "year":
             start_date = reference_date.replace(month=1, day=1).strftime("%Y-%m-%d")
-        elif time_range == "all":
-            start_date = None
             
     # Determine date format for grouping
     date_format = "%Y-%m-%d"
