@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface PokemonStore {
     filters: {
@@ -11,24 +12,31 @@ interface PokemonStore {
     resetFilters: () => void;
 }
 
-export const usePokemonStore = create<PokemonStore>((set) => ({
-    filters: {
-        timeRange: '7d',
-        groupBy: 'day',
-        segmentType: 'all',
-        filterPokemon: 'all',
-    },
-    setFilter: (key, value) =>
-        set((state) => ({
-            filters: { ...state.filters, [key]: value },
-        })),
-    resetFilters: () =>
-        set({
+export const usePokemonStore = create<PokemonStore>()(
+    persist(
+        (set) => ({
             filters: {
                 timeRange: '7d',
                 groupBy: 'day',
                 segmentType: 'all',
                 filterPokemon: 'all',
             },
+            setFilter: (key, value) =>
+                set((state) => ({
+                    filters: { ...state.filters, [key]: value },
+                })),
+            resetFilters: () =>
+                set({
+                    filters: {
+                        timeRange: '7d',
+                        groupBy: 'day',
+                        segmentType: 'all',
+                        filterPokemon: 'all',
+                    },
+                }),
         }),
-}));
+        {
+            name: 'pokemon-store',
+            storage: createJSONStorage(() => localStorage),
+        }
+    ));
