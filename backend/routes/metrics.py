@@ -12,25 +12,35 @@ router = APIRouter(prefix="/metrics", tags=["metrics"])
 def get_checkin_metrics(
     start_date: Optional[str] = None,
     end_date: Optional[str] = None,
-    time_range: Optional[str] = None,
+    time_range: Optional[str] = "7d",  # Default to last 7 days
     group_by: str = Query("day", enum=["day", "hour"]),
     type: Optional[str] = None,
     pokemon_id: Optional[int] = None,
     db: sqlite3.Connection = Depends(get_db)
 ):
-    # Handle time_range shortcut
+    # Get the latest data point date from the database to use as reference
+    # This ensures time ranges work correctly even with historical data
+    latest_date_row = db.execute("SELECT MAX(arrived_at) as max_date FROM checkins").fetchone()
+    latest_date_str = latest_date_row["max_date"] if latest_date_row else None
+    
+    if latest_date_str:
+        reference_date = datetime.strptime(latest_date_str[:10], "%Y-%m-%d")
+    else:
+        reference_date = datetime.now()
+    
+    # Handle time_range shortcut (relative to latest data, not today)
     if time_range and not start_date:
-        today = datetime.now()
         if time_range == "7d":
-            start_date = (today - timedelta(days=7)).strftime("%Y-%m-%d")
+            start_date = (reference_date - timedelta(days=7)).strftime("%Y-%m-%d")
         elif time_range == "30d":
-            start_date = (today - timedelta(days=30)).strftime("%Y-%m-%d")
+            start_date = (reference_date - timedelta(days=30)).strftime("%Y-%m-%d")
         elif time_range == "month":
-            start_date = today.replace(day=1).strftime("%Y-%m-%d")
+            start_date = reference_date.replace(day=1).strftime("%Y-%m-%d")
         elif time_range == "year":
-             start_date = today.replace(month=1, day=1).strftime("%Y-%m-%d")
+            start_date = reference_date.replace(month=1, day=1).strftime("%Y-%m-%d")
         elif time_range == "all":
-             start_date = None
+            start_date = None
+            
     # Determine date format for grouping
     date_format = "%Y-%m-%d"
     if group_by == "hour":
