@@ -40,17 +40,8 @@ export function PokemonLeaderboardTable({ topPokemon, topTypes }: PokemonLeaderb
     };
 
     const getBarColor = (index: number) => {
-        // Since we don't have type data for coloring bars perfectly like mockup, 
-        // we'll use a nice palette or default to primary.
-        // Mockup uses: Yellow, Orange, Green. 
-        const colors = [
-            "bg-yellow-400", // 1
-            "bg-orange-500", // 2
-            "bg-green-500",  // 3
-            "bg-blue-500",   // 4
-            "bg-purple-500"  // 5
-        ];
-        return colors[index % colors.length];
+        if (index === 0) return "bg-yellow-500";
+        return "bg-primary";
     };
 
     return (
