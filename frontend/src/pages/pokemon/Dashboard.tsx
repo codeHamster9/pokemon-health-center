@@ -38,7 +38,6 @@ export default function Dashboard() {
                         <Calendar className="mr-2 h-4 w-4" />
                         {format(new Date(), "MMM d, yyyy")}
                     </Button>
-                    <Button size="sm">Export</Button>
                 </div>
             </div>
 
@@ -126,9 +125,8 @@ export default function Dashboard() {
                 </PokemonCheckinTrendChart>
 
                 <PokemonLeaderboardTable
-                    title="Top Pokémon"
-                    description="Most frequent visitors"
-                    data={leaderboards.data?.top_pokemon || []}
+                    topPokemon={leaderboards.data?.top_pokemon || []}
+                    topTypes={leaderboards.data?.top_types || []}
                 />
             </div>
         </div>
