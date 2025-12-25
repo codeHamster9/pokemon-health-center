@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { pokemonApi } from '../api/pokemonApi';
 
 export const useLeaderboards = () => {
-    return useQuery({
+    return useSuspenseQuery({
         queryKey: ['leaderboards'],
         queryFn: pokemonApi.getLeaderboards,
     });

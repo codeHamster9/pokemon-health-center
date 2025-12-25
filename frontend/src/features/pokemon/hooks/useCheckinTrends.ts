@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { pokemonApi } from '../api/pokemonApi';
 
 interface TrendFilters {
@@ -8,15 +8,14 @@ interface TrendFilters {
     pokemonId?: string;
 }
 
-export const useCheckinTrends = (filters?: TrendFilters) => {
-    return useQuery({
+export const useCheckinTrends = (filters: TrendFilters) => {
+    return useSuspenseQuery({
         queryKey: ['checkin-trends', filters],
         queryFn: () => pokemonApi.getCheckinTrends(
-            filters?.timeRange || '7d',
-            filters?.groupBy || 'day',
-            filters?.type,
-            filters?.pokemonId
+            filters.timeRange,
+            filters.groupBy,
+            filters.type,
+            filters.pokemonId
         ),
-        enabled: !!filters,
     });
 };

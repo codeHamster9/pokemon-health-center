@@ -1,34 +1,15 @@
-import { Activity, Calendar, Zap, Search, Layers, BarChart2 } from "lucide-react"
-import { useCheckinTrends } from "@/features/pokemon/hooks/useCheckinTrends";
-import { useMachineMetrics } from "@/features/pokemon/hooks/useMachineMetrics";
-import { useLeaderboards } from "@/features/pokemon/hooks/useLeaderboards";
-import { usePokemonStore } from "@/features/pokemon/store/pokemonStore";
-import { PokemonStatCard } from "@/features/pokemon/components/PokemonStatCard";
-import { PokemonTotalCheckinsCard } from "@/features/pokemon/components/PokemonTotalCheckinsCard";
-import { PokemonTopMachineCard } from "@/features/pokemon/components/PokemonTopMachineCard";
-import { PokemonCheckinTrendChart } from "@/features/pokemon/components/PokemonCheckinTrendChart";
-import { PokemonLeaderboardTable } from "@/features/pokemon/components/PokemonLeaderboardTable";
+import { Suspense } from "react";
+import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
+import { PokemonStatsGrid } from "@/features/pokemon/components/PokemonStatsGrid";
+import { PokemonStatsGridSkeleton } from "@/features/pokemon/components/PokemonStatsGridSkeleton";
+import { PokemonTrendSection } from "@/features/pokemon/components/PokemonTrendSection";
+import { PokemonChartSkeleton } from "@/features/pokemon/components/PokemonChartSkeleton";
+import { PokemonLeaderboardSection } from "@/features/pokemon/components/PokemonLeaderboardSection";
+import { PokemonLeaderboardSkeleton } from "@/features/pokemon/components/PokemonLeaderboardSkeleton";
 
 export default function Dashboard() {
-    const { filters, setFilter } = usePokemonStore();
-    const { data: leaderboards } = useLeaderboards();
-    const { data: machines = [] } = useMachineMetrics();
-
-    const checkinTrends = useCheckinTrends({
-        timeRange: filters.timeRange,
-        groupBy: filters.groupBy,
-        type: filters.segmentType === 'all' ? undefined : filters.segmentType,
-        pokemonId: filters.filterPokemon === 'all' ? undefined : filters.filterPokemon
-    });
-
-    const avgSuccessRate = machines.length > 0
-        ? (machines.reduce((acc, m) => acc + (m.success_rate || 0), 0) / machines.length).toFixed(1)
-        : "0.0";
-    const activeCount = machines.filter(m => m.current_checkin).length;
-
     return (
         <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
             <div className="flex justify-between items-center">
@@ -41,82 +22,17 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <PokemonTotalCheckinsCard machines={machines} />
-                <PokemonStatCard
-                    title="Success Rate"
-                    value={`${avgSuccessRate}%`}
-                    icon={Activity}
-                    description={<span className="text-green-500 font-medium">+2.1% from yesterday</span>}
-                />
-                <PokemonStatCard
-                    title="Active Now"
-                    value={activeCount}
-                    icon={Zap} // Pulse icon replacement
-                    description={<span className="text-blue-500 font-medium animate-pulse">● Currently treating</span>}
-                />
-                <PokemonTopMachineCard machines={machines} />
-            </div>
+            <Suspense fallback={<PokemonStatsGridSkeleton />}>
+                <PokemonStatsGrid />
+            </Suspense>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-                <PokemonCheckinTrendChart data={checkinTrends.data || []} loading={checkinTrends.isLoading}>
-                    <div className="flex gap-2 flex-wrap mt-2">
-                        <Select value={filters.timeRange} onValueChange={(v) => setFilter('timeRange', v)}>
-                            <SelectTrigger className="w-[140px] h-8 text-xs">
-                                <Calendar className="mr-2 h-3 w-3 opacity-50" />
-                                <SelectValue placeholder="Range" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="7d">Last 7 days</SelectItem>
-                                <SelectItem value="30d">Last 30 days</SelectItem>
-                                <SelectItem value="month">This month</SelectItem>
-                            </SelectContent>
-                        </Select>
-
-                        <Select value={filters.groupBy} onValueChange={(v) => setFilter('groupBy', v)}>
-                            <SelectTrigger className="w-[130px] h-8 text-xs">
-                                <BarChart2 className="mr-2 h-3 w-3 opacity-50" />
-                                <SelectValue placeholder="Group by" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="day">Group by: Day</SelectItem>
-                                <SelectItem value="hour">Group by: Hour</SelectItem>
-                            </SelectContent>
-                        </Select>
-
-                        <Select value={filters.segmentType} onValueChange={(v) => setFilter('segmentType', v)}>
-                            <SelectTrigger className="w-[150px] h-8 text-xs">
-                                <Layers className="mr-2 h-3 w-3 opacity-50" />
-                                <SelectValue placeholder="Segment" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">All Types</SelectItem>
-                                <SelectItem value="electric">Electric</SelectItem>
-                                <SelectItem value="fire">Fire</SelectItem>
-                                <SelectItem value="water">Water</SelectItem>
-                                <SelectItem value="grass">Grass</SelectItem>
-                            </SelectContent>
-                        </Select>
-
-                        <Select value={filters.filterPokemon} onValueChange={(v) => setFilter('filterPokemon', v)}>
-                            <SelectTrigger className="w-[150px] h-8 text-xs">
-                                <Search className="mr-2 h-3 w-3 opacity-50" />
-                                <SelectValue placeholder="Pokemon" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">Pokemon: All</SelectItem>
-                                <SelectItem value="pikachu">Pikachu</SelectItem>
-                                <SelectItem value="charizard">Charizard</SelectItem>
-                                <SelectItem value="bulbasaur">Bulbasaur</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </PokemonCheckinTrendChart>
-
-                <PokemonLeaderboardTable
-                    topPokemon={leaderboards?.top_pokemon || []}
-                    topTypes={leaderboards?.top_types || []}
-                />
+                <Suspense fallback={<PokemonChartSkeleton />}>
+                    <PokemonTrendSection />
+                </Suspense>
+                <Suspense fallback={<PokemonLeaderboardSkeleton />}>
+                    <PokemonLeaderboardSection />
+                </Suspense>
             </div>
         </div>
     )
