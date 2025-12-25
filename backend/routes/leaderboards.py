@@ -16,7 +16,7 @@ def get_leaderboards(db: sqlite3.Connection = Depends(get_db)):
         WHERE c.outcome = 'success'
         GROUP BY p.name
         ORDER BY count DESC
-        LIMIT 10
+        LIMIT 8
     """
     top_pokemon = [
         LeaderboardEntry(name=row["name"], count=row["count"])
@@ -31,7 +31,7 @@ def get_leaderboards(db: sqlite3.Connection = Depends(get_db)):
         WHERE c.outcome = 'success'
         GROUP BY p.type_primary
         ORDER BY count DESC
-        LIMIT 10
+        LIMIT 8
     """
     top_types = [
         LeaderboardEntry(name=row["name"], count=row["count"])

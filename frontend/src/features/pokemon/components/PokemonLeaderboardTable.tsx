@@ -30,8 +30,7 @@ export function PokemonLeaderboardTable({ topPokemon, topTypes }: PokemonLeaderb
     const [category, setCategory] = useState<'pokemon' | 'types'>('pokemon');
 
     const data = category === 'pokemon' ? topPokemon : topTypes;
-    const displayData = data.slice(0, 5);
-    const maxCount = Math.max(...displayData.map(d => d.count), 1);
+    const maxCount = Math.max(...data.map(d => d.count), 1);
 
     const getRankStyles = (index: number) => {
         if (index === 0) { // Rank 1
@@ -80,7 +79,7 @@ export function PokemonLeaderboardTable({ topPokemon, topTypes }: PokemonLeaderb
             </CardHeader>
             <CardContent>
                 <div className="space-y-4 pt-4">
-                    {displayData.map((item, index) => (
+                    {data.map((item, index) => (
                         <div className="flex items-center" key={item.name}>
                             <span className={cn(
                                 "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold mr-3 border",
@@ -102,7 +101,7 @@ export function PokemonLeaderboardTable({ topPokemon, topTypes }: PokemonLeaderb
                             </div>
                         </div>
                     ))}
-                    {displayData.length === 0 && (
+                    {data.length === 0 && (
                         <div className="text-center text-sm text-muted-foreground py-4">
                             No data available
                         </div>
