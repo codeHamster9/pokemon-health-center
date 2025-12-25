@@ -1,10 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { QueryProvider } from './providers/QueryProvider';
 import { ThemeProvider } from './providers/ThemeProvider';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Activity, Sun, Moon } from 'lucide-react';
 import { useThemeStore } from './store/themeStore';
 import { cn } from './lib/utils';
-import { Button } from './components/ui/button'; // Ensure Button component is correctly imported
+import { Button } from './components/ui/button';
 import Dashboard from './pages/pokemon/Dashboard';
 import MachineMetrics from './pages/pokemon/MachineMetrics';
 import ActiveCheckins from './pages/pokemon/ActiveCheckins';
@@ -76,11 +77,13 @@ function App() {
       <ThemeProvider>
         <Router>
           <Layout>
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/machines" element={<MachineMetrics />} />
-              <Route path="/active" element={<ActiveCheckins />} />
-            </Routes>
+            <ErrorBoundary>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/machines" element={<MachineMetrics />} />
+                <Route path="/active" element={<ActiveCheckins />} />
+              </Routes>
+            </ErrorBoundary>
           </Layout>
         </Router>
       </ThemeProvider>
