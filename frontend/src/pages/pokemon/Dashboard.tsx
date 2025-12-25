@@ -1,5 +1,7 @@
 import { Activity, Calendar, Users, Zap, Search, Layers, BarChart2 } from "lucide-react"
-import { usePokemonMetrics } from "../../features/pokemon/hooks/usePokemonMetrics";
+import { useCheckinTrends } from "../../features/pokemon/hooks/useCheckinTrends";
+import { useMachineMetrics } from "../../features/pokemon/hooks/useMachineMetrics";
+import { useLeaderboards } from "../../features/pokemon/hooks/useLeaderboards";
 import { usePokemonStore } from "../../features/pokemon/store/pokemonStore";
 import { PokemonStatCard } from "../../features/pokemon/components/PokemonStatCard";
 import { PokemonCheckinTrendChart } from "../../features/pokemon/components/PokemonCheckinTrendChart";
@@ -11,10 +13,17 @@ import { Machine } from "../../features/pokemon/api/pokemonApi";
 
 export default function Dashboard() {
     const { filters, setFilter } = usePokemonStore();
-    const { checkinTrends, leaderboards, machineMetrics } = usePokemonMetrics(filters);
 
-    // Calculate high-level stats from machine metrics for now (or fetch dedicated endpoint)
-    const machines: Machine[] = machineMetrics.data || [];
+    const checkinTrends = useCheckinTrends({
+        timeRange: filters.timeRange,
+        groupBy: filters.groupBy,
+        type: filters.segmentType === 'all' ? undefined : filters.segmentType,
+        pokemonId: filters.filterPokemon === 'all' ? undefined : filters.filterPokemon
+    });
+
+    const { data: leaderboards } = useLeaderboards();
+    const { data: machines = [] } = useMachineMetrics();
+
     const totalCheckins = machines.reduce((acc, m) => acc + (m.total_checkins || 0), 0);
     const avgSuccessRate = machines.length > 0
         ? (machines.reduce((acc, m) => acc + (m.success_rate || 0), 0) / machines.length).toFixed(1)
@@ -124,8 +133,8 @@ export default function Dashboard() {
                 </PokemonCheckinTrendChart>
 
                 <PokemonLeaderboardTable
-                    topPokemon={leaderboards.data?.top_pokemon || []}
-                    topTypes={leaderboards.data?.top_types || []}
+                    topPokemon={leaderboards?.top_pokemon || []}
+                    topTypes={leaderboards?.top_types || []}
                 />
             </div>
         </div>

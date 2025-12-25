@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePokemonMetrics } from "../../features/pokemon/hooks/usePokemonMetrics";
+import { useMachineMetrics } from "../../features/pokemon/hooks/useMachineMetrics";
 import {
     Table,
     TableBody,
@@ -21,7 +21,8 @@ import { cn } from "@/lib/utils";
 
 export default function MachineMetrics() {
     const [baselineId, setBaselineId] = useState<string | undefined>(undefined);
-    const { machineMetrics } = usePokemonMetrics(); // We might need to handle comparison logic either in hook or here
+    const { data: machines = [] } = useMachineMetrics();
+
 
     // If baseline is selected, we might want to fetch comparison data specifically or just compute locally if we have all data
     // For now relying on the list returned by main endpoint. If comparison endpoint is critical:
@@ -41,7 +42,7 @@ export default function MachineMetrics() {
     // Let's use the list we have and compute deltas client side for the UI speed, 
     // unless backend does complex stuff. Backend just compares success rate.
 
-    const machines = machineMetrics.data || [];
+    // const machines = machineMetrics.data || []; // Removed redundant line
     const baselineMachine = machines.find(m => m.id?.toString() === baselineId);
 
     return (
